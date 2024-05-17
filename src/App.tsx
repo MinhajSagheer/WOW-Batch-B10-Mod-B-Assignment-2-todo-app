@@ -3,22 +3,25 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [txt, setTxt] = useState('');
-  const [txtList, setTxtList] = useState<any>([]);
+  const [txtList, setTxtList] = useState<string[]>([]);
 
-  const del = (i: any) => {
-    txtList.splice(i, 1)
+  const del = (i: number) => {
+    txtList.splice(i, 1);
     setTxtList([...txtList]);
-  }
+  };
 
-  const edit = (i: any) => {
-    let b = prompt("Enter New Text");
-    txtList[i] = b;
-    setTxtList([...txtList]);
-  }
+  const edit = (i: number) => {
+    let newText = prompt("Enter New Text");
+    if (newText !== null && newText.trim() !== "") {
+      txtList[i] = newText;
+      setTxtList([...txtList]);
+    }
+  };
 
   const delall = () => {
     setTxtList([]);
-  }
+  };
+
   return (
     <div className="container">
       <div className="row mt-5 justify-content-center">
@@ -33,7 +36,8 @@ function App() {
                   type="text"
                   className="form-control"
                   placeholder="Add a todo"
-                  value={txt} 
+                  value={txt}
+                  required
                   onChange={(e) => {
                     setTxt(e.target.value);
                   }}
@@ -43,22 +47,24 @@ function App() {
                     className="btn btn-primary"
                     type="button"
                     onClick={() => {
-                      txtList.push(txt);
-                      setTxtList([...txtList]);
-                      setTxt(''); 
+                      if (txt.trim() !== "") {  // Check if input is not empty
+                        txtList.push(txt);
+                        setTxtList([...txtList]);
+                        setTxt('');  // Clear input field after adding
+                      }
                     }}
                   >
                     Add
                   </button>
                 </div>
               </div>
-              {txtList.map((x: any, i: any) => (
+              {txtList.map((x, i) => (
                 <div key={i} className="todo-item">
                   <p>{x}</p>
                   <div>
                     <button
                       className="btn btn-danger btn-sm mr-2"
-                      onClick={() => del(i)} 
+                      onClick={() => del(i)}
                     >
                       Remove
                     </button>
@@ -71,20 +77,17 @@ function App() {
                   </div>
                 </div>
               ))}
-
               <button
                 className="btn btn-danger btn-sm float-right mt-3"
-                onClick={() => delall()}
+                onClick={delall}
               >
                 Delete All
               </button>
-
             </div>
           </div>
         </div>
       </div>
     </div>
-
   );
 }
 
